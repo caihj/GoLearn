@@ -44,7 +44,7 @@ func downLoadImg(imgurl string) string {
 		fmt.Println(err.Error())
 		return ""
 	}
-	ioutil.WriteFile(filepath, body, 600)
+	ioutil.WriteFile(filepath, body, 0600)
 
 	return filepath
 
@@ -59,8 +59,17 @@ func setWallPaper(filepath string) {
 	fmt.Printf("in all caps: %q\n", out)
 }
 
+func getWallPaper() string {
+	out, err := exec.Command("gsettings", "get", "org.gnome.desktop.background", "picture-uri").Output()
+	if err != nil {
+		fmt.Println(err)
+	}
+	filepath := string(out)
+	return filepath
+}
+
 func main() {
-	exec.Command("sleep", "20").Output()
+	//exec.Command("sleep", "20").Output()
 	imgurl := getImg()
 	fmt.Println(imgurl)
 	if len(imgurl) > 0 {
@@ -68,4 +77,6 @@ func main() {
 		fmt.Println(filepath)
 		setWallPaper(filepath)
 	}
+
+	fmt.Printf("wallpaper is %s\n", getWallPaper())
 }
